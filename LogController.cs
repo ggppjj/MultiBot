@@ -4,11 +4,11 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace MultiBot.Logging;
+namespace MultiBot;
 
 internal class LogController
 {
-    internal ILogger SetupLogging(
+    internal static ILogger SetupLogging(
         Type contextType,
         IConfigurationRoot? localApplicationConfig = null
     )

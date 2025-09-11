@@ -1,9 +1,9 @@
 ﻿using Discord;
-using MultiBot.Platforms;
+using MultiBot.Interfaces;
 
 namespace MultiBot.Commands;
 
-internal class Cinephile : IBotCommand
+internal class CinephileCommand : IBotCommand
 {
     public string Name { get; } = "Cinephile";
     public string Description { get; } =
@@ -14,7 +14,7 @@ internal class Cinephile : IBotCommand
     private readonly List<Embed> _embeds = [];
     private readonly Random _random = new();
 
-    internal Cinephile()
+    internal CinephileCommand()
     {
         _embeds.Add(
             new EmbedBuilder { Title = "Movie 1", ImageUrl = $"attachment://{_fileName}" }.Build()

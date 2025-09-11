@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using MultiBot;
 using MultiBot.Bots;
-using MultiBot.Logging;
+using MultiBot.Interfaces;
 using Serilog;
 
 _ = args;
@@ -16,46 +18,48 @@ var localApplicationConfig = new ConfigurationBuilder()
     .Build();
 
 var logController = new LogController();
-var logger = logController.SetupLogging(typeof(Program), localApplicationConfig);
+var logger = LogController.SetupLogging(typeof(Program), localApplicationConfig);
 
 logger.Information("Starting...");
-bots.Add(new TCHJR(logController));
 
 Console.CancelKeyPress += (_, e) =>
 {
     e.Cancel = true;
     logger.Information("Received shutdown signal...");
-    Shutdown();
+    _ = Task.Run(async () => await Shutdown());
 };
 AppDomain.CurrentDomain.ProcessExit += (_, _) =>
 {
     logger.Information("Application process exiting...");
-    Shutdown();
+    _ = Task.Run(async () => await Shutdown());
 };
 
 try
 {
+    bots.Add(new TCHJRBot());
     logger.Information("Started.");
     Task.Delay(Timeout.Infinite, shutdownCts.Token).Wait();
 }
 catch (AggregateException ex) when (ex.InnerException is OperationCanceledException) { }
-catch (Exception ex)
+catch (Exception)
 {
-    logger.Fatal(ex, "Fatal error occurred during application execution.");
+    logger.Fatal("Fatal error occurred during application execution.");
 }
 finally
 {
     if (!shutdownCompleted)
-        Shutdown();
+        await Shutdown();
 }
 
-void Shutdown()
+async Task Shutdown()
 {
     if (!shutdownCompleted)
     {
         logger.Information("Starting shutdown process...");
+        var tasks = new List<Task>();
         foreach (var bot in bots)
-            bot.Shutdown();
+            tasks.Add(bot.Shutdown());
+        await Task.WhenAll(tasks);
         shutdownCompleted = true;
         shutdownCts?.Cancel();
         logger.Information("Application shutdown completed.");

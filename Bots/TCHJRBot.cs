@@ -1,11 +1,11 @@
 ﻿using MultiBot.Commands;
-using MultiBot.Logging;
+using MultiBot.Interfaces;
 using MultiBot.Platforms;
 using Serilog;
 
 namespace MultiBot.Bots;
 
-internal class TCHJR : IBot
+internal class TCHJRBot : IBot
 {
     public string Name { get; } = "TCHJR";
     public List<IBotCommand> Commands { get; } = [];
@@ -15,20 +15,30 @@ internal class TCHJR : IBot
 
     public void OnCommand(string message) => Console.WriteLine("Event received: " + message);
 
-    internal TCHJR(LogController logController)
+    internal TCHJRBot()
     {
-        _logger = logController.SetupLogging(typeof(TCHJR));
+        _logger = LogController.SetupLogging(typeof(TCHJRBot));
         _logger.Information("Starting...");
-        Commands.Add(new Cinephile());
-        _platforms.Add(new DiscordPlatform(logController, this));
-        _logger.Information("Started.");
+        Commands.Add(new CinephileCommand());
+        try
+        {
+            _platforms.Add(new DiscordPlatform(this));
+            _logger.Information("Started.");
+        }
+        catch (InvalidDataException e)
+        {
+            _logger.Fatal(e.Message);
+            throw;
+        }
     }
 
-    public void Shutdown()
+    public async Task Shutdown()
     {
         _logger.Information("Shutting down...");
+        var tasks = new List<Task>();
         foreach (var platform in _platforms)
-            platform.Shutdown();
+            tasks.Add(platform.Shutdown());
+        await Task.WhenAll(tasks);
         _logger.Information("Shutdown complete.");
     }
 }

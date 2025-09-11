@@ -1,6 +1,4 @@
-﻿using MultiBot.Platforms;
-
-namespace MultiBot.Commands;
+﻿namespace MultiBot.Interfaces;
 
 internal interface IBotCommand
 {
