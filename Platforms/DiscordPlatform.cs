@@ -1,9 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Discord;
+﻿using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
-using MultiBot.Bots;
+using MultiBot.Helper_Classes;
 using MultiBot.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
@@ -193,9 +192,9 @@ internal class DiscordPlatform : IBotPlatform
         }
         try
         {
-            _ = await _discordClient.BulkOverwriteGlobalApplicationCommandsAsync(
-                [.. applicationCommandProperties]
-            );
+            _ = await _discordClient.BulkOverwriteGlobalApplicationCommandsAsync([
+                .. applicationCommandProperties,
+            ]);
         }
         catch (HttpException exception)
         {

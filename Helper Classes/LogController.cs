@@ -4,7 +4,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace MultiBot;
+namespace MultiBot.Helper_Classes;
 
 internal class LogController
 {

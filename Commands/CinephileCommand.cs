@@ -15,9 +15,9 @@ internal class CinephileCommand : IBotCommand
     private readonly string _fileName2 = "image2.png";
     private readonly string _fileName3 = "image3.png";
 
-    private readonly string _imagePath1 = Path.Combine("Images", "image1.png");
-    private readonly string _imagePath2 = Path.Combine("Images", "image2.png");
-    private readonly string _imagePath3 = Path.Combine("Images", "image3.png");
+    private readonly string _imagePath1 = Path.Combine("Resources", "Images", "image1.png");
+    private readonly string _imagePath2 = Path.Combine("Resources", "Images", "image2.png");
+    private readonly string _imagePath3 = Path.Combine("Resources", "Images", "image3.png");
 
     private readonly List<(Embed embed, string filePath, string fileName)> _movieData = [];
     private readonly Random _random = new();
@@ -54,7 +54,7 @@ internal class CinephileCommand : IBotCommand
                 {
                     Title = "Movie 3",
                     ImageUrl = $"attachment://{_fileName3}",
-                    Description = "A classic film that never gets old.",
+                    Description = "A classic adventure film that never gets old.",
                 }.Build(),
                 _imagePath3,
                 _fileName3
