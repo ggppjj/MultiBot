@@ -25,7 +25,7 @@ public static class ConfigHelper
         if (!Directory.Exists(ConfigDirectory))
         {
             Directory.CreateDirectory(ConfigDirectory);
-            Log.Information($"Created config directory: {ConfigDirectory}");
+            Log.Information($"Created config directory: {ConfigDirectory}.");
         }
     }
 
@@ -35,7 +35,7 @@ public static class ConfigHelper
         if (!Directory.Exists(botConfigDir))
         {
             Directory.CreateDirectory(botConfigDir);
-            Log.Information($"Created bot config directory: {botConfigDir}");
+            Log.Information($"Created bot config directory: {botConfigDir}.");
         }
     }
 }
@@ -83,17 +83,17 @@ public abstract class CommandConfigBase<TConfig>
             {
                 Config = config;
                 OnConfigLoaded();
-                _logger.Information($"Loaded configuration from {_configFilePath}");
+                _logger.Information($"Loaded configuration from {_configFilePath}.");
             }
             else
             {
-                _logger.Warning("Config file is empty or invalid, using defaults");
+                _logger.Warning("Config file is empty or invalid, using defaults!");
                 CreateAndSaveDefaultConfig();
             }
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error loading configuration, using defaults");
+            _logger.Error(ex, "Error loading configuration, using defaults!");
             CreateAndSaveDefaultConfig();
         }
     }
@@ -106,11 +106,11 @@ public abstract class CommandConfigBase<TConfig>
             var json = JsonSerializer.Serialize(Config, JsonTypeInfo);
             File.WriteAllText(_configFilePath, json);
             OnConfigLoaded();
-            _logger.Information($"Created default config at {_configFilePath}");
+            _logger.Information($"Created default config at {_configFilePath}.");
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to create default configuration");
+            _logger.Error(ex, "Failed to create default configuration!");
             Config = new TConfig();
         }
     }
@@ -140,11 +140,11 @@ public abstract class CommandConfigBase<TConfig>
                     });
             };
 
-            _logger.Information("Config file watcher enabled");
+            _logger.Information("Config file watcher enabled.");
         }
         catch (Exception ex)
         {
-            _logger.Warning(ex, "Failed to setup config file watcher");
+            _logger.Warning(ex, "Failed to setup config file watcher!");
         }
     }
 
